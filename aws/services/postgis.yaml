@@ -27,6 +27,8 @@ spec:
       containers:
       - image: public.ecr.aws/b3b9b3w1/postgis
         name: postgis
+        #command: ["/bin/sh"]
+        #args: ["-c", "while true; do echo hello; sleep 10;done"]
         env:
           - name: POSTGRES_USER
             value: postgres
@@ -36,6 +38,8 @@ spec:
             value: stratus
           - name: DATADIR
             value: /var/lib/postgresql/data
+          - name: PASSWORD_AUTHENTICATION
+            value: md5
           - name: RECREATE_DATADIR
             value: "TRUE"
         ports:

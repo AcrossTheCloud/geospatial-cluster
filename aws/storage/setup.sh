@@ -16,7 +16,16 @@ aws iam create-policy \
 
 aws eks describe-cluster --name $cluster_name --query "cluster.identity.oidc.issuer" --output text
 
+aws iam create-role \
+  --role-name AmazonEKS_EFS_CSI_DriverRole \
+  --assume-role-policy-document file://"trust-policy.json"
+
+aws iam attach-role-policy \
+  --policy-arn arn:aws:iam::$aws_account_id:policy/AmazonEKS_EFS_CSI_Driver_Policy \
+  --role-name AmazonEKS_EFS_CSI_DriverRole
+
 kubectl apply -f efs-service-account.yaml
+
 
 kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/aws-efs-csi-driver/master/deploy/kubernetes/base/csidriver.yaml
 

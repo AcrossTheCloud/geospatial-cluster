@@ -1,10 +1,14 @@
+---
 apiVersion: v1
 kind: Service
 metadata:
   name: geonetwork
 spec:
   ports:
-  - port: 8080
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+  type: NodePort
   selector:
     app: geonetwork
 ---
@@ -26,11 +30,15 @@ spec:
       containers:
       - name: geonetwork
         image: geonetwork:postgres
+        resources:
+          requests:
+            memory: "8Gi"
+            cpu: 4
         ports:
           - containerPort: 8080
         env:
-          - name: DATA_DIR
-            value: /var/lib/geonetwork_data
+          #- name: DATA_DIR
+          #  value: /var/lib/geonetwork_data
           - name: POSTGRES_DB_HOST
             value: "postgis.default.svc.cluster.local"
           - name: POSTGRES_DB_PORT
@@ -48,3 +56,22 @@ spec:
       - name: geonetwork
         persistentVolumeClaim:
           claimName: efs-claim
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-geonetwork
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-southeast-2:455563481328:certificate/b9ab462d-e5bb-45b1-8dae-092494c2db6b
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: geonetwork
+              servicePort: 8080
