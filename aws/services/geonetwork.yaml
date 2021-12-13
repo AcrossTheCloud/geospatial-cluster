@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - name: geonetwork
-        image: geonetwork:postgres
+        image: public.ecr.aws/b3b9b3w1/geonetwork:postgres
         resources:
           requests:
             memory: "8Gi"
