@@ -1,0 +1,64 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: geonetwork
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+  type: NodePort
+  selector:
+    app: geonetwork
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: geonetwork
+spec:
+  selector:
+    matchLabels:
+      app: geonetwork
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: geonetwork
+    spec:
+      containers:
+      - name: geonetwork
+        image: public.ecr.aws/b3b9b3w1/geonetwork:postgres
+        resources:
+          requests:
+            memory: "4Gi"
+            cpu: 1
+        ports:
+          - containerPort: 8080
+        env:
+          #- name: DATA_DIR
+          #  value: /var/lib/geonetwork_data
+          - name: POSTGRES_DB_HOST
+            value: "atcgeospatial.postgres.database.azure.com"
+          - name: POSTGRES_DB_PORT
+            value: "5432"
+          - name: POSTGRES_DB_NAME
+            value: stratus
+          - name: POSTGRES_DB_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: postgres-basic-auth
+                key: username
+          - name: POSTGRES_DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgres-basic-auth
+                key: password
+        volumeMounts:
+        - mountPath: /var/lib/geonetwork_data
+          name: geonetwork
+      volumes:
+      - name: geonetwork
+        persistentVolumeClaim:
+          claimName: azurefile
