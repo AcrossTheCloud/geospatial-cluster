@@ -1,0 +1,60 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: geoserver
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+  type: NodePort
+  selector:
+    app: geoserver
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: geoserver
+spec:
+  selector:
+    matchLabels:
+      app: geoserver
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: geoserver
+    spec:
+      containers:
+      - name: geoserver
+        image: kartoza/geoserver
+        resources:
+          requests:
+            memory: "8Gi"
+            cpu: 4
+        ports:
+          - containerPort: 8080
+        env:
+          #- name: DATA_DIR
+          #  value: /var/lib/geoserver_data
+          - name: DB_BACKEND
+            value: POSTGRES
+          - name: HOST
+            value: "postgis.default.svc.cluster.local"
+          - name: POSTGRES_PORT
+            value: "5432"
+          - name: POSTGRES_DB
+            value: geoserver
+          - name: POSTGRES_USER
+            value: postgres
+          - name: POSTGRES_PASS
+            value: postgres
+        volumeMounts:
+        - mountPath: /var/lib/geoserver_data
+          name: geoserver
+      volumes:
+      - name: geoserver
+        persistentVolumeClaim:
+          claimName: local-pvc

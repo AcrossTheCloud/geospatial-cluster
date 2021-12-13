@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgis
+spec:
+  ports:
+  - port: 5432
+  selector:
+    app: postgis
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgis
+spec:
+  selector:
+    matchLabels:
+      app: postgis
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: postgis
+    spec:
+      containers:
+      - image: public.ecr.aws/b3b9b3w1/postgis
+        name: postgis
+        #command: ["/bin/sh"]
+        #args: ["-c", "while true; do echo hello; sleep 10;done"]
+        env:
+          - name: POSTGRES_USER
+            value: postgres
+          - name: POSTGRES_PASS
+            value: postgres
+          - name: POSTGRES_DBNAME
+            value: stratus
+          - name: DATADIR
+            value: /var/lib/postgresql/data
+          - name: PASSWORD_AUTHENTICATION
+            value: md5
+          - name: RECREATE_DATADIR
+            value: "TRUE"
+        ports:
+        - containerPort: 5432
+          name: postgis
+        volumeMounts:
+        - name: postgis
+          mountPath: /var/lib/postgresql
+      volumes:
+      - name: postgis
+        persistentVolumeClaim:
+          claimName: local-pvc

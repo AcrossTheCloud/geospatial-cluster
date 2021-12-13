@@ -1,0 +1,76 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: geonetwork
+spec:
+  ports:
+    - port: 8081
+      targetPort: 8080
+      protocol: TCP
+  type: NodePort
+  selector:
+    app: geonetwork
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: geonetwork
+spec:
+  selector:
+    matchLabels:
+      app: geonetwork
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: geonetwork
+    spec:
+      containers:
+      - name: geonetwork
+        image: public.ecr.aws/b3b9b3w1/geonetwork:postgres
+        resources:
+          requests:
+            memory: "8Gi"
+            cpu: 4
+        ports:
+          - containerPort: 8080
+        env:
+          #- name: DATA_DIR
+          #  value: /var/lib/geonetwork_data
+          - name: POSTGRES_DB_HOST
+            value: "postgis.default.svc.cluster.local"
+          - name: POSTGRES_DB_PORT
+            value: "5432"
+          - name: POSTGRES_DB_NAME
+            value: stratus
+          - name: POSTGRES_DB_USERNAME
+            value: postgres
+          - name: POSTGRES_DB_PASSWORD
+            value: postgres
+        volumeMounts:
+        - mountPath: /var/lib/geonetwork_data
+          name: geonetwork
+      volumes:
+      - name: geonetwork
+        persistentVolumeClaim:
+          claimName: local-pvc
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-geonetwork
+spec:
+  rules:
+  - host: 10.8.241.237
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: geonetwork
+            port:
+              number: 80
+  ingressClassName: nginx
