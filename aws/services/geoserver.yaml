@@ -37,26 +37,32 @@ spec:
         ports:
           - containerPort: 8080
         env:
-          #- name: DATA_DIR
-          #  value: /var/lib/geoserver_data
+          - name: DATA_DIR
+            value: /opt/geoserver/data_dir
           - name: DB_BACKEND
             value: POSTGRES
           - name: HOST
-            value: "postgis.default.svc.cluster.local"
+            value: "atc.cwmmye32pmdj.ap-southeast-2.rds.amazonaws.com"
           - name: POSTGRES_PORT
             value: "5432"
           - name: POSTGRES_DB
             value: geoserver
           - name: POSTGRES_USER
-            value: postgres
+            valueFrom:
+              secretKeyRef:
+                name: db-auth
+                key: username
           - name: POSTGRES_PASS
-            value: postgres
+            valueFrom:
+              secretKeyRef:
+                name: db-auth
+                key: password
           - name: GEOSERVER_CSRF_WHITELIST
             value: "geoserver.acrossthecloud.net"
           - name: HTTP_SCHEME
             value: https
         volumeMounts:
-        - mountPath: /var/lib/geoserver_data
+        - mountPath: /opt/geoserver
           name: geoserver
       volumes:
       - name: geoserver

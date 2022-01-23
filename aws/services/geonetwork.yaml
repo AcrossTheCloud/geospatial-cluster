@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - name: geonetwork
-        image: public.ecr.aws/b3b9b3w1/geonetwork:postgres
+        image: geonetwork:3.12.2-postgres
         resources:
           requests:
             memory: "8Gi"
@@ -37,20 +37,26 @@ spec:
         ports:
           - containerPort: 8080
         env:
-          #- name: DATA_DIR
-          #  value: /var/lib/geonetwork_data
+          - name: DATA_DIR
+            value: /var/lib/geonetwork/geonetwork_data
           - name: POSTGRES_DB_HOST
-            value: "postgis.default.svc.cluster.local"
+            value: "atc.cwmmye32pmdj.ap-southeast-2.rds.amazonaws.com"
           - name: POSTGRES_DB_PORT
             value: "5432"
           - name: POSTGRES_DB_NAME
             value: stratus
           - name: POSTGRES_DB_USERNAME
-            value: postgres
+            valueFrom:
+              secretKeyRef:
+                name: db-auth
+                key: username
           - name: POSTGRES_DB_PASSWORD
-            value: postgres
+            valueFrom:
+              secretKeyRef:
+                name: db-auth
+                key: password
         volumeMounts:
-        - mountPath: /var/lib/geonetwork_data
+        - mountPath: /var/lib/geonetwork
           name: geonetwork
       volumes:
       - name: geonetwork
