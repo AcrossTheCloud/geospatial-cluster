@@ -10,6 +10,7 @@ curl -o iam-policy-example.json https://raw.githubusercontent.com/kubernetes-sig
 
 aws iam create-policy \
     --policy-name AmazonEKS_EFS_CSI_Driver_Policy \
+    --tags Key=project,Value=aurin \
     --policy-document file://iam-policy-example.json
 
 eksctl utils associate-iam-oidc-provider --region=ap-southeast-2 --cluster $cluster_name --approve
@@ -23,6 +24,7 @@ eksctl create iamserviceaccount \
     --attach-policy-arn arn:aws:iam::$aws_account_id:policy/AmazonEKS_EFS_CSI_Driver_Policy \
     --approve \
     --override-existing-serviceaccounts \
+    --tags Key=project,Value=aurin \
     --region $region
 
 vpc_id=$(aws eks describe-cluster \
@@ -50,6 +52,7 @@ aws ec2 authorize-security-group-ingress \
 file_system_id=$(aws efs create-file-system \
     --region $region \
     --encrypted \
+    --tags Key=project,Value=aurin \
     --performance-mode generalPurpose \
     --query 'FileSystemId' \
     --output text)

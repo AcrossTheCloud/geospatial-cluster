@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - name: geonetwork
-        image: geonetwork:3.12.2-postgres
+        image: geonetwork:3.12.3-postgres
         resources:
           requests:
             memory: "8Gi"
@@ -40,7 +40,7 @@ spec:
           - name: DATA_DIR
             value: /var/lib/geonetwork/geonetwork_data
           - name: POSTGRES_DB_HOST
-            value: "atc.cwmmye32pmdj.ap-southeast-2.rds.amazonaws.com"
+            value: "aurin-db.c5paqu2fyx9p.ap-southeast-2.rds.amazonaws.com"
           - name: POSTGRES_DB_PORT
             value: "5432"
           - name: POSTGRES_DB_NAME
@@ -72,7 +72,7 @@ metadata:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
-    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-southeast-2:455563481328:certificate/b9ab462d-e5bb-45b1-8dae-092494c2db6b
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-southeast-2:816753656149:certificate/242af49d-9ed1-489a-9081-0b86624df3a9
 spec:
   rules:
     - http:

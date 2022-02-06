@@ -42,7 +42,7 @@ spec:
           - name: DB_BACKEND
             value: POSTGRES
           - name: HOST
-            value: "atc.cwmmye32pmdj.ap-southeast-2.rds.amazonaws.com"
+            value: "aurin-db.c5paqu2fyx9p.ap-southeast-2.rds.amazonaws.com"
           - name: POSTGRES_PORT
             value: "5432"
           - name: POSTGRES_DB
@@ -58,7 +58,7 @@ spec:
                 name: db-auth
                 key: password
           - name: GEOSERVER_CSRF_WHITELIST
-            value: "geoserver.acrossthecloud.net"
+            value: "geoserver.smartinfrastructuredashboard.org"
           - name: HTTP_SCHEME
             value: https
         volumeMounts:
@@ -78,7 +78,7 @@ metadata:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
-    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-southeast-2:455563481328:certificate/1b6852db-0195-400f-a7b4-69ac932a6b74
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-southeast-2:816753656149:certificate/6d3f85fd-f195-4cd0-a7f5-88dd51d606fa
 spec:
   rules:
     - http:
