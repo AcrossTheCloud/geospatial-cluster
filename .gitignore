@@ -1,4 +1,4 @@
 storage/efs/iam-policy-example.json
 storage/efs/subnets.*
-secret.yaml
+#secret.yaml
 .DS_Store

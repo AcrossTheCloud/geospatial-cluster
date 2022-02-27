@@ -48,9 +48,15 @@ spec:
           - name: POSTGRES_DB
             value: geoserver
           - name: POSTGRES_USER
-            value: postgres
+            valueFrom:
+              secretKeyRef:
+                name: db-auth
+                key: username
           - name: POSTGRES_PASS
-            value: postgres
+            valueFrom:
+              secretKeyRef:
+                name: db-auth
+                key: password
         volumeMounts:
         - mountPath: /var/lib/geoserver_data
           name: geoserver

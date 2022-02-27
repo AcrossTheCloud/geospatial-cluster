@@ -3,7 +3,6 @@
 
 cluster_name="geospatial"
 region="ap-southeast-2"
-# set this: aws_account_id=""
 export AWS_PAGER=""
 
 curl -o iam-policy-example.json https://raw.githubusercontent.com/kubernetes-sigs/aws-efs-csi-driver/v1.3.6/docs/iam-policy-example.json
@@ -12,10 +11,6 @@ aws iam create-policy \
     --policy-name AmazonEKS_EFS_CSI_Driver_Policy \
     --tags Key=project,Value=aurin \
     --policy-document file://iam-policy-example.json
-
-eksctl utils associate-iam-oidc-provider --region=ap-southeast-2 --cluster $cluster_name --approve
-
-aws eks describe-cluster --name $cluster_name --query "cluster.identity.oidc.issuer" --output text
 
 eksctl create iamserviceaccount \
     --name efs-csi-controller-sa \
@@ -73,3 +68,13 @@ while read subnetID; do
     --subnet-id $subnetID \
     --security-groups $security_group_id
 done < "subnets.txt"
+
+access_point_id=$(aws efs create-access-point \
+    --file-system-id $file_system_id \
+    --posix-user Uid=501,Gid=501 \
+    --root-directory 'Path=/geospatial,CreationInfo={OwnerUid=501,OwnerGid=501,Permissions=0750}' \
+    --query 'AccessPointId' \
+    --output text)
+# make a note of this
+echo file_system_id $file_system_id
+echo access_point_id $access_point_id

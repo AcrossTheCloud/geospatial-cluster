@@ -1,32 +1,32 @@
 [
     {
-        "SubnetId": "subnet-0f29aa5510172da36",
+        "SubnetId": "subnet-014d5a019853280c4",
         "AvailabilityZone": "ap-southeast-2b",
+        "CidrBlock": "192.168.96.0/19"
+    },
+    {
+        "SubnetId": "subnet-024eeb10100828235",
+        "AvailabilityZone": "ap-southeast-2a",
         "CidrBlock": "192.168.128.0/19"
     },
     {
-        "SubnetId": "subnet-0227686ae403b4f47",
+        "SubnetId": "subnet-0d85a52d2895ff308",
+        "AvailabilityZone": "ap-southeast-2c",
+        "CidrBlock": "192.168.64.0/19"
+    },
+    {
+        "SubnetId": "subnet-027a75bdf78511c94",
+        "AvailabilityZone": "ap-southeast-2b",
+        "CidrBlock": "192.168.0.0/19"
+    },
+    {
+        "SubnetId": "subnet-0e358acac4b0e83fe",
         "AvailabilityZone": "ap-southeast-2c",
         "CidrBlock": "192.168.160.0/19"
     },
     {
-        "SubnetId": "subnet-058392ba2ae02849e",
-        "AvailabilityZone": "ap-southeast-2b",
+        "SubnetId": "subnet-01d513e5f3f2ea887",
+        "AvailabilityZone": "ap-southeast-2a",
         "CidrBlock": "192.168.32.0/19"
-    },
-    {
-        "SubnetId": "subnet-06556c915a3c7824c",
-        "AvailabilityZone": "ap-southeast-2a",
-        "CidrBlock": "192.168.0.0/19"
-    },
-    {
-        "SubnetId": "subnet-0d944892291ac5941",
-        "AvailabilityZone": "ap-southeast-2a",
-        "CidrBlock": "192.168.96.0/19"
-    },
-    {
-        "SubnetId": "subnet-088dae4934a53496c",
-        "AvailabilityZone": "ap-southeast-2c",
-        "CidrBlock": "192.168.64.0/19"
     }
 ]

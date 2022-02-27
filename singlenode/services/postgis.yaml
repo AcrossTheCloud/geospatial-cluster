@@ -31,9 +31,15 @@ spec:
         #args: ["-c", "while true; do echo hello; sleep 10;done"]
         env:
           - name: POSTGRES_USER
-            value: postgres
+            valueFrom:
+              secretKeyRef:
+                name: db-auth
+                key: username
           - name: POSTGRES_PASS
-            value: postgres
+            valueFrom:
+              secretKeyRef:
+                name: db-auth
+                key: password
           - name: POSTGRES_DBNAME
             value: stratus
           - name: DATADIR
