@@ -39,6 +39,10 @@ spec:
         env:
           - name: DATA_DIR
             value: /opt/geoserver/data_dir
+          - name: GEOSERVER_UID
+            value: "501"
+          - name: GEOSERVER_GID
+            value: "501"
           - name: DB_BACKEND
             value: POSTGRES
           - name: HOST
@@ -69,7 +73,7 @@ spec:
         persistentVolumeClaim:
           claimName: efs-claim
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ingress-geoserver
@@ -83,7 +87,10 @@ spec:
   rules:
     - http:
         paths:
-          - path: /*
+          - path: /
+            pathType: Prefix
             backend:
-              serviceName: geoserver
-              servicePort: 8080
+              service:
+                name: geoserver
+                port:
+                  number: 8080
