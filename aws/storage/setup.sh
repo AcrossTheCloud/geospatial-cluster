@@ -5,7 +5,7 @@ cluster_name="geospatial"
 region="ap-southeast-2"
 export AWS_PAGER=""
 
-curl -o iam-policy-example.json https://raw.githubusercontent.com/kubernetes-sigs/aws-efs-csi-driver/v1.3.6/docs/iam-policy-example.json
+curl -o iam-policy-example.json https://raw.githubusercontent.com/kubernetes-sigs/aws-efs-csi-driver/v1.4.8/docs/iam-policy-example.json
 
 aws iam create-policy \
     --policy-name AmazonEKS_EFS_CSI_Driver_Policy \
@@ -78,3 +78,12 @@ access_point_id=$(aws efs create-access-point \
 # make a note of this
 echo file_system_id $file_system_id
 echo access_point_id $access_point_id
+
+helm repo add aws-efs-csi-driver https://kubernetes-sigs.github.io/aws-efs-csi-driver/
+helm repo update
+
+helm upgrade -i aws-efs-csi-driver aws-efs-csi-driver/aws-efs-csi-driver \
+    --namespace kube-system \
+    --set image.repository=602401143452.dkr.ecr.ap-southeast-2.amazonaws.com/eks/aws-efs-csi-driver \
+    --set controller.serviceAccount.create=false \
+    --set controller.serviceAccount.name=efs-csi-controller-sa
