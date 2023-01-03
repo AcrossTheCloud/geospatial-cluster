@@ -3,7 +3,6 @@
 # from https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html
 
 cluster_name="geospatial"
-namespace="geospatial"
 region="ap-southeast-2"
 export AWS_PAGER=""
 
@@ -15,7 +14,7 @@ eksctl create cluster \
 
 #eksctl create fargateprofile --namespace $namespace --name $namespace --cluster $cluster_name
 
-curl -o iam_policy.json https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.3.1/docs/install/iam_policy.json
+curl -o iam_policy.json https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.4.5/docs/install/iam_policy.json
 
 aws iam create-policy \
     --policy-name AWSLoadBalancerControllerIAMPolicy \
@@ -46,6 +45,6 @@ helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
   --set serviceAccount.create=false \
   --set serviceAccount.name=aws-load-balancer-controller \
   --set region=ap-southeast-2 \
-  --set vpcId=$vpc_id \
+  --set vpcId="$vpc_id" \
   --set defaultTags.project=aurin \
   --set image.repository=602401143452.dkr.ecr.ap-southeast-2.amazonaws.com/amazon/aws-load-balancer-controller
