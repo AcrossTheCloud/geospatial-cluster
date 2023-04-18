@@ -1,4 +1,6 @@
 # geospatial-cluster
+## Comments
+Due to change of direction to on-prem non-Kubernetes solution, only the AWS solution is complete and tested.
 ## Overall requirements
 1. Install [kubectl](https://kubernetes.io/docs/tasks/tools/)
 2. Install [helm](https://helm.sh/docs/intro/install/#through-package-managers).
